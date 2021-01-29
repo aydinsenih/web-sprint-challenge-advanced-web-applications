@@ -10,6 +10,9 @@ test("Fetches data and renders the bubbles on mounting", async () => {
     // Finish this test
     render(<BubblePage />);
     expect(screen.getByText(/bubbles/i));
+    await waitFor(() => {
+        expect(screen.queryAllByTestId("bubble"));
+    });
 });
 
 //Task List
