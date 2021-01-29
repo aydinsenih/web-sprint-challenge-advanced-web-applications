@@ -1,18 +1,67 @@
-import React, { useEffect } from "react";
-import axios from "axios";
+import React from "react";
+import axiosWithAuth from "../helpers/axiosWithAuth";
+import { Form, Input, Button } from "antd";
 
-const Login = () => {
-  // make a post request to retrieve a token from the api
-  // when you have handled the token, navigate to the BubblePage route
+const Login = (props) => {
+    // make a post request to retrieve a token from the api
+    // when you have handled the token, navigate to the BubblePage route
 
-  return (
-    <>
-      <h1>
-        Welcome to the Bubble App!
-        <p>Build a login page here</p>
-      </h1>
-    </>
-  );
+    const onFinish = (values) => {
+        axiosWithAuth()
+            .post("/login", values)
+            .then((res) => {
+                localStorage.setItem("token", res.data.payload);
+                props.history.push("/bubblepage");
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    return (
+        <>
+            <Form
+                name="login"
+                initialValues={{
+                    username: "Lambda School",
+                    password: "i<3Lambd4",
+                }}
+                onFinish={onFinish}
+            >
+                <Form.Item
+                    label="Username"
+                    name="username"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your username!",
+                        },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="Password"
+                    name="password"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Please input your password!",
+                        },
+                    ]}
+                >
+                    <Input.Password />
+                </Form.Item>
+
+                <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </Form.Item>
+            </Form>
+        </>
+    );
 };
 
 export default Login;
